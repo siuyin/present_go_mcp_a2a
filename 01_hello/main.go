@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"gomcp/ollam"
 	"log"
 	"os"
 
 	"github.com/ollama/ollama/api"
 	"github.com/siuyin/dflt"
+	"github.com/siuyin/present_go_mcp_a2a/ollam"
 )
 
 func main() {

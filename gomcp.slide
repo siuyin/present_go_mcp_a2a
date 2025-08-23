@@ -124,12 +124,12 @@ With LLMs you need to deal with inherent non-determinism, just as with humans.
 ## tool calling code:
 .code -numbers 02_tool/main.go /messages/,/newChat/
 
-Lines 32-58: The tool definition code is verbose and painful to write.
+Lines 38-51: The tool definition code is verbose and painful to write.
 
 ## Ollama Chat Completion with tool calling
 .code -numbers 02_tool/main.go /func.*complete/,/^}/
 
-Line 77: Inspect chat response and vheck if the LLM has called any tools.
+Line 78: Inspect chat response and vheck if the LLM has called any tools.
 
 Line 83: Tools are actually called here.
 
