@@ -143,9 +143,8 @@ func mcpCallTool(session *mcp.ClientSession, params *mcp.CallToolParams) string 
 	s := ""
 	for _, c := range res.Content {
 		s += c.(*mcp.TextContent).Text
-		//log.Print(c.(*mcp.TextContent).Text)
 	}
-	log.Printf("\tTool: %s called: output: %s", params.Name, s)
+	log.Printf("\tTool: %s called with args: %v. resp: %s", params.Name, params.Arguments, s)
 	return s
 }
 

@@ -171,12 +171,24 @@ Programs in this folder can be found and run.
 
 `ls -lh ~/bin/myserver`
 
+## Demo: using the MCP Server
+
+`go run ./04_mcpclient/`
+
+Did we do anything different from:  
+`go run ./02_tool/`
+
+The output certainly looks the same!
+
 ## MCP Client
-.code -numbers 04_mcpclient/main.go /messages/,/Println/
+.code -numbers 04_mcpclient/main.go /messages/,/newChat/
 
 Line 34: connect to the MCP Server.  
 Line 37: get a tool listing from the MCP Server Client Session.  
 Line 39: use tools in LLM chat completion.
+
+## compare with local tool definitions
+.code -numbers 02_tool/main.go /messages/,/newChat/
 
 ## listTools
 .code -numbers 04_mcpclient/main.go /func listTool/,/^}/
