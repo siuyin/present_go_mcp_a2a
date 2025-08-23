@@ -125,3 +125,15 @@ With LLMs you need to deal with inherent non-determinism, just as with humans.
 .code -numbers 02_tool/main.go /messages/,/newChat/
 
 Lines 32-58: The tool definition code is verbose and painful to write.
+
+## Model Context Protocol (MCP)
+
+The minimum comprises an MCP **server** and an MCP **client**.  
+We are going to write both in Go.
+
+The **server** program can be an executable on your computer's path, or  
+a http server that can send server sent events (SSE), otherwise known as streaming http.
+
+The **client** program will use Anthropic's official SDK:  
+https://github.com/modelcontextprotocol/go-sdk  
+godoc: https://pkg.go.dev/github.com/modelcontextprotocol/go-sdk@v0.3.0/mcp

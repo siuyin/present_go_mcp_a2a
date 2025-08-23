@@ -1,10 +1,17 @@
-module gomcp
+module github.com/siuyin/present_go_mcp_a2a
 
 go 1.24.6
 
 require (
-	github.com/ollama/ollama v0.11.6 // indirect
-	github.com/siuyin/dflt v0.0.0-20230329062002-0475f4d54412 // indirect
+	github.com/modelcontextprotocol/go-sdk v0.3.0
+	github.com/ollama/ollama v0.11.6
+	github.com/siuyin/dflt v0.0.0-20230329062002-0475f4d54412
+)
+
+require (
+	github.com/google/jsonschema-go v0.2.0 // indirect
+	github.com/siuyin/mcptry v0.0.0-20250818154544-30f56191a674 // indirect
+	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
 	golang.org/x/crypto v0.36.0 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 )
