@@ -1,0 +1,4 @@
+*.swp
+*secret*
+.venv
+__pycache__

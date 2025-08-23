@@ -1,0 +1,47 @@
+# AI / LLM Applications with Go
+MCP (Model Context Protocol) and A2A (Agent to Agent) protocol
+
+
+Loh Siu Yin
+Engineer, Beyond Broadcast LLP
+siuyin@beyondbroadcast.com
+
+
+## My target environment
+* Local inference, preferably without GPU.
+* Applications preferably run on user\'s computer to harness an organisation\'s cumulative compute power.
+* Go -- for reliable godocs, great reliability and good performance.
+
+## Technologies
+* Ollama: https://ollama.com/
+* Ollama Go API. go docs: https://pkg.go.dev/github.com/ollama/ollama/api
+* LLMs: qwen3:1.7b, qwen3:0.6b, gemma3:1b, gemma3:270m  
+  The above are relatively small models that will run on most intel i3 level CPUs and 2GB RAM.
+
+## Hello world
+.code -numbers 01_hello/main.go /func main/,/^}/
+
+Lines 13 - 16: configuration from environment variables  
+Line 26: call ollama for chat completion
+
+## Streaming response function
+.code -numbers 01_hello/main.go /func responseFunction/,/^}/
+
+Line 30: responseFunction takes an ollama api chat response
+
+## demo
+```
+go run ./01_hello/
+
+SYS="Provide very verbose responses." go run ./01_hello/
+
+MODEL=qwen3:0.6b go run ./01_hello/
+
+```
+
+## Why code at the Go Ollama API level?
+
+Why not python frameworks like Pydantic AI (https://ai.pydantic.dev/),
+or LangChain (https://python.langchain.com/api_reference/ollama/chat_models/langchain_ollama.chat_models.ChatOllama.html#chatollama) ?
+
+
