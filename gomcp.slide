@@ -44,5 +44,60 @@ ls -l /tmp/j ; cat /tmp/j
 
 ```
 
+## Why Go and not Python?
+
+## Hello World with Python and Langchain
+.code -numbers 01_hello/main.py /def main/,/complete/
+
+It looks pretty much the same.  
+Ingore lines 18-21 for now. I will come back to it.
+
+## demo
+```
+time uv run ./01_hello/main.py
+
+time go run ./01_hello/
 
 
+MODEL=qwen3:0.6b uv run ./01_hello/main.py
+
+MODEL=qwen3:0.6b go run ./01_hello/
+```
+
+It works pretty much the same.
+
+## Type safety
+.code -numbers 01_hello/main.py /# See:/,/change messages/
+
+`uv run mypy --check-untyped-defs ./01_hello/`
+
+What would happen if I run the non-type compliant code?
+
+## 4 reasons I prefer Go over Python
+
+1. Python makes it easy to write type-unchecked code.  
+   Type checks are **only** done during compile time using a separate tool, eg mypy  
+   They are **not** enforced during run time.
+
+1. Publishing a custom `Go` package, eg. `dftl`, is as simple as pushing to github.  
+   A custom `Python` package requires build, registering, and `twining` to PyPI.  
+   See: https://packaging.python.org/en/latest/tutorials/packaging-projects/  
+   This discourages refactoring code into reusable packages where appropriate.
+
+1. Go applications are packaged as a single static binary,  
+   cross-compilable to windows, mac and linux.  
+   Python packaging typically requires building a `docker` image or  
+   downloading python and `pip install -r requirements.txt`  
+   or `uv sync` (requires uv)
+
+1. I much prefer `Go`\'s import syntax over `Python`\'s  
+   See next slide.
+
+## Import statements
+Go:
+
+.code 01_hello/main.go /import/,/^\)/
+
+Python:
+
+.code 01_hello/main.py /import/,/def main/-1
