@@ -17,13 +17,31 @@ func main() {
 	sys := dflt.EnvString("SYS", "Provide concise responses.")
 	log.Printf("OLLAMA_HOST=%s MODEL=%s SYS=%q PROMPT=%q ", host, model, sys, prompt)
 
-	client := ollam.Client(host)
-
 	messages := []api.Message{
 		{Role: "system", Content: sys},
 		{Role: "user", Content: prompt},
 	}
 
+	chat := newChat(host, model, messages)
+	chat.complete()
+
+}
+
+func newChat(host string, model string, messages []api.Message) *myChat {
+	c := myChat{}
+	c.cl = ollam.Client(host)
+	c.msgs = messages
+	c.model = model
+	return &c
+}
+
+type myChat struct {
+	cl    *api.Client
+	msgs  []api.Message
+	model string
+}
+
+func (m *myChat) complete() {
 	f := createThinkFile("/tmp/j")
 	defer f.Close()
 
@@ -37,8 +55,9 @@ func main() {
 		return nil
 	}
 
-	ollam.Chat(client, model, messages, responseFunction)
+	ollam.Chat(m.cl, m.model, m.msgs, responseFunction)
 	fmt.Println()
+
 }
 
 func createThinkFile(name string) *os.File {

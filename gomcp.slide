@@ -21,13 +21,14 @@ siuyin@beyondbroadcast.com
 ## Hello world
 .code -numbers 01_hello/main.go /func main/,/^}/
 
-Lines 13 - 16: configuration from environment variables  
-Line 26: call ollama for chat completion
+Lines 14 - 17: configuration from environment variables  
+Lines 25, 26 : call ollama for chat completion
 
-## Streaming response function
-.code -numbers 01_hello/main.go /func responseFunction/,/^}/
+## chat.complete()
+.code -numbers 01_hello/main.go / complete/,/^}/
 
-Line 30: responseFunction takes an ollama api chat response
+Lines 48, 54: takes the streaming ollam chat response, r, and prints it.  
+Line 58: the ollama chat call.
 
 ## demo
 ```
@@ -36,12 +37,12 @@ go run ./01_hello/
 SYS="Provide very verbose responses." go run ./01_hello/
 
 MODEL=qwen3:0.6b go run ./01_hello/
+MODEL=qwen3:0.6b THINK=false go run ./01_hello/
+MODEL=qwen3:0.6b THINK=aloud go run ./01_hello/
+MODEL=qwen3:0.6b THINK=true go run ./01_hello/
+ls -l /tmp/j ; cat /tmp/j
 
 ```
 
-## Why code at the Go Ollama API level?
-
-Why not python frameworks like Pydantic AI (https://ai.pydantic.dev/),
-or LangChain (https://python.langchain.com/api_reference/ollama/chat_models/langchain_ollama.chat_models.ChatOllama.html#chatollama) ?
 
 
