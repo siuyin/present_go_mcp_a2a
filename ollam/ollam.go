@@ -28,9 +28,41 @@ func Chat(client *api.Client, model string, messages []api.Message, respFunc fun
 
 }
 
+// ChatTools requests a ollama chat completion with tools, chat history, messages, and streaming response via respFunc.
+func ChatTools(client *api.Client, model string, tools []api.Tool, messages []api.Message, respFunc func(r api.ChatResponse) error) {
+	req := chatReqTools(model, messages, tools)
+
+	ctx := context.Background()
+	if err := client.Chat(ctx, req, respFunc); err != nil {
+		log.Fatal("chat: ", err)
+	}
+
+}
+
 func chatReq(model string, messages []api.Message) *api.ChatRequest {
 	think := dflt.EnvString("THINK", "aloud")
 
+	return &api.ChatRequest{
+		Model:    model,
+		Messages: messages,
+		Options:  map[string]any{"temperature": 0.1},
+		Think:    thinkValueFor(think),
+	}
+}
+
+func chatReqTools(model string, messages []api.Message, tools []api.Tool) *api.ChatRequest {
+	think := dflt.EnvString("THINK", "false")
+
+	return &api.ChatRequest{
+		Model:    model,
+		Messages: messages,
+		Options:  map[string]any{"temperature": 0.1},
+		Think:    thinkValueFor(think),
+		Tools:    tools,
+	}
+}
+
+func thinkValueFor(think string) *api.ThinkValue {
 	var tv any = false
 	switch think {
 	case "true":
@@ -41,10 +73,5 @@ func chatReq(model string, messages []api.Message) *api.ChatRequest {
 		tv = false
 	}
 
-	return &api.ChatRequest{
-		Model:    model,
-		Messages: messages,
-		Options:  map[string]any{"temperature": 0.1},
-		Think:    &api.ThinkValue{tv},
-	}
+	return &api.ThinkValue{tv}
 }
