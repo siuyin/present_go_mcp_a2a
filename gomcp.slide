@@ -101,3 +101,27 @@ Go:
 Python:
 
 .code 01_hello/main.py /import/,/def main/-1
+
+## Tool Calling
+For a Large Language Model to call tools, it needs to have tool calling capabilities.
+
+gemma3 does not, but qwen3 does.
+
+Also smaller models like `qwen3:0.6b` have limited capabilities to parse complex sentences.
+Turning on thinking sometimes helps. In some cases over-thinking leads to bad results.
+
+## demo:
+`go run ./02_tool/`  
+`PROMPT='Please tell me if you have the exquisite iphone 14 within the confines of your organization?' go run ./02_tool/`  
+`THINK=aloud PROMPT='Please tell me if you have the exquisite iphone 14 within the confines of your organization?' go run ./02_tool/`  
+`PROMPT='product: iphone 14, check stock level' go run ./02_tool/`  
+`PROMPT='product: iphone 15, check stock level' go run ./02_tool/`  
+`PROMPT='How much is SimpleX' go run ./02_tool/`  
+`THINK=true PROMPT='How much is SimpleX' go run ./02_tool/`
+
+With LLMs you need to deal with inherent non-determinism, just as with humans.
+
+## tool calling code:
+.code -numbers 02_tool/main.go /messages/,/newChat/
+
+Lines 32-58: The tool definition code is verbose and painful to write.
