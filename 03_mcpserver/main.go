@@ -10,7 +10,6 @@ import (
 
 func main() {
 	log.Println("myserver running")
-
 	server := mcp.NewServer(&mcp.Implementation{Name: "mymcp", Version: "v1.0.0"}, nil)
 
 	mcp.AddTool(server,
@@ -18,7 +17,6 @@ func main() {
 			Description: "look up inventory to get product ID, Name and Price in USD given a product_name",
 			Title:       "Lookup Inventory",
 		}, lookup)
-
 	server.AddPrompt(&mcp.Prompt{Name: "lookupInventorySystemPrompt"}, promptHandler)
 
 	if err := server.Run(context.Background(), mcp.NewStdioTransport()); err != nil {

@@ -35,31 +35,15 @@ func main() {
 	defer sess.Close()
 
 	tools := listTools(sess)
-	//listOllam(tools)
-
-	ctx := context.Background()
-	lp, err := sess.ListPrompts(ctx, &mcp.ListPromptsParams{})
-	if err != nil {
-		log.Fatal("list prompts: ", err)
-	}
-	for _, p := range lp.Prompts {
-		fmt.Printf("prompt: %s\n", p.Name)
-		gpr, err := sess.GetPrompt(ctx, &mcp.GetPromptParams{Name: p.Name})
-		if err != nil {
-			log.Fatal("get prompt: ", err)
-		}
-
-		for _, m := range gpr.Messages {
-			tc := textContent(m.Content)
-			fmt.Printf("%v %v\n", m.Role, tc.Text)
-		}
-	}
 
 	chat := newChat(host, model, messages, tools, sess)
 	for n := 0; n < 2; n++ {
 		chat.complete()
 	}
 	fmt.Println()
+
+	//listOllam(tools)
+	//listPrompts(sess)
 }
 
 func textContent(c mcp.Content) *mcp.TextContent {
@@ -163,4 +147,24 @@ func mcpCallTool(session *mcp.ClientSession, params *mcp.CallToolParams) string 
 	}
 	log.Printf("\tTool: %s called: output: %s", params.Name, s)
 	return s
+}
+
+func listPrompts(sess *mcp.ClientSession) {
+	ctx := context.Background()
+	lp, err := sess.ListPrompts(ctx, &mcp.ListPromptsParams{})
+	if err != nil {
+		log.Fatal("list prompts: ", err)
+	}
+	for _, p := range lp.Prompts {
+		fmt.Printf("prompt: %s\n", p.Name)
+		gpr, err := sess.GetPrompt(ctx, &mcp.GetPromptParams{Name: p.Name})
+		if err != nil {
+			log.Fatal("get prompt: ", err)
+		}
+
+		for _, m := range gpr.Messages {
+			tc := textContent(m.Content)
+			fmt.Printf("%v %v\n", m.Role, tc.Text)
+		}
+	}
 }

@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"gomcp/db"
-	"gomcp/ollam"
 	"log"
 
 	"github.com/ollama/ollama/api"
 	"github.com/siuyin/dflt"
+	"github.com/siuyin/present_go_mcp_a2a/db"
+	"github.com/siuyin/present_go_mcp_a2a/ollam"
 )
 
 type ToolParams struct {
@@ -75,28 +75,34 @@ type myChat struct {
 
 func (m *myChat) complete() {
 	responseFunction := func(r api.ChatResponse) error {
-		if len(r.Message.ToolCalls) == 0 {
+		if !hasToolCall(r) {
 			fmt.Print(r.Message.Content)
 			return nil
 		}
 
-		for _, tc := range r.Message.ToolCalls {
-			fn := tc.Function
-			log.Printf("Model wants to call tool: %s with args: %v", fn.Name, fn.Arguments)
-			switch fn.Name {
-			case "lookupInventory":
-				pn := fn.Arguments["product_name"].(string)
-				output := db.Get(pn)
-				m.msgs = append(m.msgs, api.Message{
-					Role:    "tool",
-					Content: output,
-				})
-				log.Printf("\tTool: %s called with args: %s. resp: %s", fn.Name, fn.Arguments, output)
-			}
-		}
+		m.runToolCalls(r)
 		return nil
 	}
-
 	ollam.ChatTools(m.cl, m.model, m.tools, m.msgs, responseFunction)
+}
 
+func hasToolCall(r api.ChatResponse) bool {
+	return len(r.Message.ToolCalls) > 0
+}
+
+func (m *myChat) runToolCalls(r api.ChatResponse) {
+	for _, tc := range r.Message.ToolCalls {
+		fn := tc.Function
+		log.Printf("Model wants to call tool: %s with args: %v", fn.Name, fn.Arguments)
+		switch fn.Name {
+		case "lookupInventory":
+			pn := fn.Arguments["product_name"].(string)
+			output := db.Get(pn)
+			m.msgs = append(m.msgs, api.Message{
+				Role:    "tool",
+				Content: output,
+			})
+			log.Printf("\tTool: %s called with args: %s. resp: %s", fn.Name, fn.Arguments, output)
+		}
+	}
 }

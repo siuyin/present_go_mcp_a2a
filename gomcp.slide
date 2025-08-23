@@ -126,6 +126,22 @@ With LLMs you need to deal with inherent non-determinism, just as with humans.
 
 Lines 32-58: The tool definition code is verbose and painful to write.
 
+## Ollama Chat Completion with tool calling
+.code -numbers 02_tool/main.go /func.*complete/,/^}/
+
+Line 77: Inspect chat response and vheck if the LLM has called any tools.
+
+Line 83: Tools are actually called here.
+
+## runToolCalls
+.code -numbers 02_tool/main.go /func.*runToolCalls/,/^}/
+
+Line 100: the inventory database is called
+
+Line 101 - 103: output is added to the tool response.
+
+## Model Context Protocol
+
 ## Model Context Protocol (MCP)
 
 The minimum comprises an MCP **server** and an MCP **client**.  
@@ -137,3 +153,34 @@ a http server that can send server sent events (SSE), otherwise known as streami
 The **client** program will use Anthropic's official SDK:  
 https://github.com/modelcontextprotocol/go-sdk  
 godoc: https://pkg.go.dev/github.com/modelcontextprotocol/go-sdk@v0.3.0/mcp
+
+## MCP Server
+.code -numbers 03_mcpserver/main.go /func main/,/^}/
+
+Line 13: Create a new mcp server.  
+Lines 15 - 19: Add a tool to the server.  
+Line 20: Ignore for now. I'll come back to it.  
+Line 22: When the server file is run, communicate using stdio.
+
+## Compiling the mcp server
+
+`go build -o ~/bin/myserver ./03_mcpserver/`
+
+`~/bin` is shorthand for `$HOME/bin`.  
+Programs in this folder can be found and run. 
+
+`ls -lh ~/bin/myserver`
+
+## MCP Client
+.code -numbers 04_mcpclient/main.go /messages/,/Println/
+
+Line 34: connect to the MCP Server.  
+Line 37: get a tool listing from the MCP Server Client Session.  
+Line 39: use tools in LLM chat completion.
+
+## listTools
+.code -numbers 04_mcpclient/main.go /func listTool/,/^}/
+
+Line 77: MCP list tools call
+
+Line 82: The tools from MCP are `jsonschema` format. `ollam.FromMCP` converts them to ollama api.Tool format.
