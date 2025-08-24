@@ -2,6 +2,7 @@ package ollam
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/ollama/ollama/api"
@@ -74,4 +75,11 @@ func thinkValueFor(think string) *api.ThinkValue {
 	}
 
 	return &api.ThinkValue{tv}
+}
+
+// DumpMessages prints out []api.Messsges in a user friendly manner.
+func DumpMessages(msgs []api.Message) {
+	for _, m := range msgs {
+		fmt.Printf("%s: %s: toolCalls: %d\n", m.Role, m.Content, len(m.ToolCalls))
+	}
 }
