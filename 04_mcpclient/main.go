@@ -90,13 +90,15 @@ func listOllam(tools []api.Tool) {
 	}
 }
 
-func newChat(host string, model string, messages []api.Message, tools []api.Tool, sess *mcp.ClientSession) *myChat {
+func newChat(host string, model string, messages []api.Message,
+	tools []api.Tool, sess *mcp.ClientSession) *myChat {
+
 	c := myChat{}
 	c.cl = ollam.Client(host)
 	c.msgs = messages
 	c.model = model
 	c.tools = tools
-	c.sess = sess
+	c.sess = sess // HL
 	return &c
 }
 
@@ -105,7 +107,7 @@ type myChat struct {
 	msgs  []api.Message
 	model string
 	tools []api.Tool
-	sess  *mcp.ClientSession
+	sess  *mcp.ClientSession // HL
 }
 
 func (m *myChat) complete() {
@@ -118,7 +120,8 @@ func (m *myChat) complete() {
 		for _, tc := range r.Message.ToolCalls {
 			fn := tc.Function
 			log.Printf("Model wants to call tool: %s with args: %v", fn.Name, fn.Arguments)
-			output := mcpCallTool(m.sess, &mcp.CallToolParams{Name: fn.Name, Arguments: fn.Arguments})
+			output := mcpCallTool(m.sess, // HL
+				&mcp.CallToolParams{Name: fn.Name, Arguments: fn.Arguments}) // HL
 			m.msgs = append(m.msgs, api.Message{
 				Role:    "tool",
 				Content: output,
@@ -133,7 +136,7 @@ func (m *myChat) complete() {
 
 func mcpCallTool(session *mcp.ClientSession, params *mcp.CallToolParams) string {
 	ctx := context.Background()
-	res, err := session.CallTool(ctx, params)
+	res, err := session.CallTool(ctx, params) // HL
 	if err != nil {
 		return fmt.Sprintf("mcpCallTool failed: %v", err)
 	}

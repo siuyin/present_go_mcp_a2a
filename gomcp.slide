@@ -196,3 +196,14 @@ Line 39: use tools in LLM chat completion.
 Line 77: MCP list tools call
 
 Line 82: The tools from MCP are `jsonschema` format. `ollam.FromMCP` converts them to ollama api.Tool format.
+
+## newChat
+.code 04_mcpclient/main.go /func newChat/,/^}/
+
+.code 04_mcpclient/main.go /type myChat/,/^}/
+
+## chat completion
+.code 04_mcpclient/main.go /func.*complete/,/^}/
+
+## mcpCallTool
+.code 04_mcpclient/main.go /func mcpCallTool/,/^}/
