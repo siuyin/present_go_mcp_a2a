@@ -207,3 +207,14 @@ Line 82: The tools from MCP are `jsonschema` format. `ollam.FromMCP` converts th
 
 ## mcpCallTool
 .code 04_mcpclient/main.go /func mcpCallTool/,/^}/
+
+## Recap
+1. Model Context Protocol (MCP) makes it easier to build tools that are callable from an LLM's MCP Client.
+
+1. MCP tools may be served over stdio or streaming HTTP (with server sent events).
+
+1. The MCP tools list returned from the MCP Server is in json schema format.
+   Conversion to the LLM's local tool calling format may be required.
+
+1. MCP also provides prompts and resources to LLM MCP Clients.  
+   We will cover this next.
