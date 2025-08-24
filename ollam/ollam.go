@@ -83,3 +83,9 @@ func DumpMessages(msgs []api.Message) {
 		fmt.Printf("%s: %s: toolCalls: %d\n", m.Role, m.Content, len(m.ToolCalls))
 	}
 }
+
+// LastMessage returns the last message in []api.Message.
+func LastMessage(msgs []api.Message) api.Message {
+	n := len(msgs)
+	return msgs[n-1]
+}
