@@ -235,6 +235,8 @@ Test setup:
 
 .code 04_mcpclient/prompt_test.go /func TestMCP/,/t.Run/-1
 
+`go test -v -count=1 ./04_mcpclient/`
+
 ## list prompt:
 .code 04_mcpclient/prompt_test.go /"ListPrompts"/,/\t}\)/
 
@@ -245,4 +247,14 @@ get prompt:
 ## prompt messages:
 .code 04_mcpclient/prompt_test.go /"PromptMessages"/,/\t}\)/
 
+## Agent to Agent protocol (A2A)
 
+## Agent to Agent protocol (A2A)
+A2A enables collaboration between agents.  
+These agents need not be LLM powered.
+
+See: [https://github.com/a2aproject/A2A](https://github.com/a2aproject/A2A)
+
+## Source code
+
+[https://github.com/siuyin/present_go_mcp_a2a](https://github.com/siuyin/present_go_mcp_a2a)
