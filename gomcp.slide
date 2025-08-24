@@ -218,3 +218,31 @@ Line 82: The tools from MCP are `jsonschema` format. `ollam.FromMCP` converts th
 
 1. MCP also provides prompts and resources to LLM MCP Clients.  
    We will cover this next.
+
+## MCP Prompts
+MCP provides the capability to serve prompts to clients.
+See Line 20 below.
+
+.code -numbers 03_mcpserver/main.go /func main/,/^}/
+
+## prompt handler
+.code  03_mcpserver/main.go /func promptHandler/,/^}/
+
+The prompt handler is called when the client makes a GetPrompt request.
+
+## Exploring MCP prompts with tests
+Test setup:
+
+.code 04_mcpclient/prompt_test.go /func TestMCP/,/t.Run/-1
+
+## list prompt:
+.code 04_mcpclient/prompt_test.go /"ListPrompts"/,/\t}\)/
+
+get prompt:
+
+.code 04_mcpclient/prompt_test.go /"GetPrompt"/,/\t}\)/
+
+## prompt messages:
+.code 04_mcpclient/prompt_test.go /"PromptMessages"/,/\t}\)/
+
+

@@ -7,7 +7,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-// These set of test work with ./03_mcpserver, with the output binary "myserver".
+// These set of tests work with ./03_mcpserver, with server "myserver".
 func TestMCP(t *testing.T) {
 	sess := mcpConnect("myserver")
 	defer sess.Close()
@@ -20,7 +20,7 @@ func TestMCP(t *testing.T) {
 	)
 
 	t.Run("ListPrompts", func(t *testing.T) {
-		lpr, err = sess.ListPrompts(ctx, &mcp.ListPromptsParams{})
+		lpr, err = sess.ListPrompts(ctx, &mcp.ListPromptsParams{}) // sets test global lpr
 		if err != nil {
 			t.Error(err)
 		}

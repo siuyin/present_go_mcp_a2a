@@ -34,7 +34,9 @@ func lookup(ctx context.Context, req *mcp.CallToolRequest, args lookupInput) (*m
 
 func promptHandler(ctx context.Context, r *mcp.GetPromptRequest) (*mcp.GetPromptResult, error) {
 	return &mcp.GetPromptResult{Messages: []*mcp.PromptMessage{
-		&mcp.PromptMessage{Role: mcp.Role("system"), Content: &mcp.TextContent{Text: "System prompt"}},
-		&mcp.PromptMessage{Role: mcp.Role("user"), Content: &mcp.TextContent{Text: "User prompt"}},
+		&mcp.PromptMessage{Role: mcp.Role("system"),
+			Content: &mcp.TextContent{Text: "System prompt"}},
+		&mcp.PromptMessage{Role: mcp.Role("user"),
+			Content: &mcp.TextContent{Text: "User prompt"}},
 	}}, nil
 }
