@@ -193,9 +193,9 @@ Line 39: use tools in LLM chat completion.
 ## listTools
 .code -numbers 04_mcpclient/main.go /func listTool/,/^}/
 
-Line 77: MCP list tools call
+Line 62: MCP list tools call
 
-Line 82: The tools from MCP are `jsonschema` format. `ollam.FromMCP` converts them to ollama api.Tool format.
+Line 67: The tools from MCP are `jsonschema` format. `ollam.FromMCP` converts them to ollama api.Tool format.
 
 ## newChat
 .code 04_mcpclient/main.go /func newChat/,/^}/
@@ -255,7 +255,7 @@ These agents need not be LLM powered.
 
 See: [https://github.com/a2aproject/A2A](https://github.com/a2aproject/A2A)
 
-See also Tencent's implementation godoc:
+See also Tencent's implementation godoc:  
 [https://pkg.go.dev/trpc.group/trpc-go/trpc-a2a-go](https://pkg.go.dev/trpc.group/trpc-go/trpc-a2a-go)
 
 ## A2A inventory lookup agent
@@ -282,7 +282,10 @@ But this could take longer than a brute-force table scan.
 .code  05_a2ainventory/main.go /func myTaskManager/,/^}/
 
 The task manager is responsible for maintaining state.  
-In this case a memory based task manager is created.
+In this case, a memory based task manager is created.
+
+Lets run this agent:  
+`go run ./05_a2ainventory/`
 
 ## agent card
 .code  05_a2ainventory/main.go /func myAgentCard/,/^}/
