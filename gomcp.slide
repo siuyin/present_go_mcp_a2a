@@ -150,9 +150,9 @@ We are going to write both in Go.
 The **server** program can be an executable on your computer's path, or  
 a http server that can send server sent events (SSE), otherwise known as streaming http.
 
-The **client** program will use Anthropic's official SDK:  
-https://github.com/modelcontextprotocol/go-sdk  
-godoc: https://pkg.go.dev/github.com/modelcontextprotocol/go-sdk@v0.3.0/mcp
+The **client** program, like the server,  will use Anthropic's official SDK:  
+[https://github.com/modelcontextspec/go-sdk](https://github.com/modelcontextspec/go-sdk)  
+godoc: [https://pkg.go.dev/github.com/modelcontextprotocol/go-sdk@v0.3.0/mcp](https://pkg.go.dev/github.com/modelcontextprotocol/go-sdk@v0.3.0/mcp)
 
 ## MCP Server
 .code -numbers 03_mcpserver/main.go /func main/,/^}/

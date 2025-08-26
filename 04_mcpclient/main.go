@@ -23,6 +23,7 @@ func main() {
 	Example2: "is iphone 14 in stock", "iphone 14" is the product_name.
 	Example3: "product id for simpleX phone", "simpleX" is the product_name.
 	`)
+
 	log.Printf("OLLAMA_HOST=%s MODEL=%s SYS=%q PROMPT=%q ", host, model, sys, prompt)
 
 	messages := []api.Message{
