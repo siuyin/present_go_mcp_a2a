@@ -71,7 +71,7 @@ func sendMsg(cl *client.A2AClient, qry string, timeout time.Duration) string {
 func formatResponse(prompt string) {
 	host := dflt.EnvString("OLLAMA_HOST", "http://localhost:11434")
 	model := dflt.EnvString("MODEL", "gemma3:1b")
-	sys := dflt.EnvString("SYS", "Provide concise responses.")
+	sys := dflt.EnvString("SYS", "Strictly use only the data provided by inventory lookup. Response in text format.")
 	log.Printf("OLLAMA_HOST=%s MODEL=%s SYS=%q PROMPT=%q ", host, model, sys, prompt)
 
 	messages := []api.Message{
