@@ -255,6 +255,39 @@ These agents need not be LLM powered.
 
 See: [https://github.com/a2aproject/A2A](https://github.com/a2aproject/A2A)
 
+## A2A inventory lookup agent
+.code 05_a2ainventory/main.go /func main/,/^}/
+
+Creating a new A2A server requires an AgentCard and a  
+TaskManager configured with a message processor.
+
+## message processor
+.code -numbers 05_a2ainventory/main.go /inventoryLookupAgent/,/return.*MessageProcessingResult/+1
+
+Line 27: The actual lookup happens here. The rest is boiler-plate code.
+
+## inventoryLookup
+.code  05_a2ainventory/main.go /func inventoryLookup/,/^}/
+
+The code above searches for the product_name in text submitted by the user.  
+No LLM or AI is used here.
+
+LLM could be used to parse input text for the product_name.
+But this could take longer than a brute-force table scan.
+
+## task manager
+.code  05_a2ainventory/main.go /func myTaskManager/,/^}/
+
+The task manager is responsible for maintaining state.  
+In this case a memory based task manager is created.
+
+## agent card
+.code  05_a2ainventory/main.go /func myAgentCard/,/^}/
+
+This enables an agent to share what skills it has.  
+The intent is to populate an agent registry so that 
+all teams within an organisation can discover relevant agents.
+
 ## Source code
 
 [https://github.com/siuyin/present_go_mcp_a2a](https://github.com/siuyin/present_go_mcp_a2a)

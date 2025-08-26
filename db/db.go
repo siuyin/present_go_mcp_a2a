@@ -42,3 +42,15 @@ func Get(productName string) string {
 	}
 	return item.String()
 }
+
+func keysOfMap[T any](m map[string]T) []string {
+	keys := []string{}
+	for k := range m {
+		keys = append(keys, k)
+	}
+	return keys
+}
+
+func List() []string {
+	return keysOfMap(inventory)
+}

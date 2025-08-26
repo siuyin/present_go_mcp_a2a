@@ -1,6 +1,9 @@
 package db
 
-import "testing"
+import (
+	"slices"
+	"testing"
+)
 
 func TestGet(t *testing.T) {
 	dat := []struct {
@@ -17,5 +20,18 @@ func TestGet(t *testing.T) {
 		if s != d.o {
 			t.Errorf("case %d: expected: %q, got: %q\n", i, s, d.o)
 		}
+	}
+}
+
+func TestList(t *testing.T) {
+	pl := List()
+	if n := len(pl); n != 3 {
+		t.Errorf("expected 3 entries, got: %d", n)
+	}
+	if pos := slices.Index(pl, "simplex"); pos == -1 {
+		t.Error("expected simplex to be present")
+	}
+	if pos := slices.Index(pl, "iphone 15"); pos == -1 {
+		t.Error("expected iphone 15 to be present")
 	}
 }
