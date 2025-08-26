@@ -13,8 +13,8 @@ siuyin@beyondbroadcast.com
 * Go -- for reliable godocs, great reliability and good performance.
 
 ## Technologies
-* Ollama: https://ollama.com/
-* Ollama Go API. go docs: https://pkg.go.dev/github.com/ollama/ollama/api
+* Ollama: [https://ollama.com/](https://ollama.com)
+* Ollama Go API. go docs: [https://pkg.go.dev/github.com/ollama/ollama/api](https://pkg.go.dev/trpc.group/trpc-go/trpc-a2a-go)
 * LLMs: qwen3:1.7b, qwen3:0.6b, gemma3:1b, gemma3:270m  
   The above are relatively small models that will run on most intel i3 level CPUs and 2GB RAM.
 
@@ -117,7 +117,7 @@ Turning on thinking sometimes helps. In some cases over-thinking leads to bad re
 `PROMPT='product: iphone 14, check stock level' go run ./02_tool/`  
 `PROMPT='product: iphone 15, check stock level' go run ./02_tool/`  
 `PROMPT='How much is SimpleX' go run ./02_tool/`  
-`THINK=true PROMPT='How much is SimpleX' go run ./02_tool/`
+`THINK=aloud PROMPT='How much is SimpleX' go run ./02_tool/`
 
 With LLMs you need to deal with inherent non-determinism, just as with humans.
 
@@ -254,6 +254,9 @@ A2A enables collaboration between agents.
 These agents need not be LLM powered.
 
 See: [https://github.com/a2aproject/A2A](https://github.com/a2aproject/A2A)
+
+See also Tencent's implementation godoc:
+[https://pkg.go.dev/trpc.group/trpc-go/trpc-a2a-go](https://pkg.go.dev/trpc.group/trpc-go/trpc-a2a-go)
 
 ## A2A inventory lookup agent
 .code 05_a2ainventory/main.go /func main/,/^}/
