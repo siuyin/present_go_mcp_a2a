@@ -288,6 +288,28 @@ This enables an agent to share what skills it has.
 The intent is to populate an agent registry so that 
 all teams within an organisation can discover relevant agents.
 
+## A2A product enquiry agent
+.code -numbers 06_a2aclient/main.go /func main/,/^}/
+
+Line 21: inventoryLookup connects to the inventory A2A remote agent (server).  
+Formats the remote agent's response message as a string.
+
+
+Line 23: An LLM is asked to format the response in a human friendly way.
+
+Note: This is a general purpose program that happens to call an LLM.  
+It can have conditionals and loops.
+
+## demo:
+
+`go run ./06_a2aclient/`  
+`PROMPT='What is the price of SimpleX and what is your stock level' go run ./06_a2aclient/`  
+`PROMPT='Stock level: iphone 15' go run ./06_a2aclient/`  
+`PROMPT='How much is the doggy in the window?' go run ./06_a2aclient/`  
+
+`PROMPT='Stock level: iphone 15' MODEL=gemma3:270m go run ./06_a2aclient/`  
+`PROMPT='How much is the doggy in the window?' MODEL=gemma3:270m go run ./06_a2aclient/`  
+
 ## Source code
 
 [https://github.com/siuyin/present_go_mcp_a2a](https://github.com/siuyin/present_go_mcp_a2a)
