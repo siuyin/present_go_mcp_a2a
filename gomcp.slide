@@ -287,6 +287,9 @@ In this case, a memory based task manager is created.
 Lets run this agent:  
 `go run ./05_a2ainventory/`
 
+With a browser:  
+[http://localhost:8080/.well-known/agent.json](http://localhost:8080/.well-known/agent.json)
+
 ## agent card
 .code  05_a2ainventory/main.go /func myAgentCard/,/^}/
 
@@ -294,7 +297,7 @@ This enables an agent to share what skills it has.
 The intent is to populate an agent registry so that 
 all teams within an organisation can discover relevant agents.
 
-## A2A product enquiry agent
+## A2A product enquiry client
 .code -numbers 06_a2aclient/main.go /func main/,/^}/
 
 Line 21: inventoryLookup connects to the inventory A2A remote agent (server).  
