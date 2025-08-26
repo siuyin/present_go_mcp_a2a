@@ -310,6 +310,26 @@ It can have conditionals and loops.
 `PROMPT='Stock level: iphone 15' MODEL=gemma3:270m go run ./06_a2aclient/`  
 `PROMPT='How much is the doggy in the window?' MODEL=gemma3:270m go run ./06_a2aclient/`  
 
+`PROMPT='How much is the iphone 14 in the window?' MODEL=qwen3:0.6b THINK=false go run ./06_a2aclient/`  
+`PROMPT='How much is the iphone 14 in the window?' MODEL=qwen3:0.6b THINK=true go run ./06_a2aclient/`  
+`cat /tmp/j`  
+
+## inventoryLookup
+.code 06_a2aclient/lookup.go /func inventoryLookup/,/^}/  
+
+Note: the timeout if we can't connect to the agent in time.
+
+## sendMsg
+.code 06_a2aclient/lookup.go /func sendMsg/,/^}/  
+
+## recap
+* A2A compliant agents are general purpose programs which may contain sequences, conditionals or loops.
+
+* Agents may use LLMs for their language generation, entity extraction (format as json) or summarization capabilities.
+
+* A2A protocol allows for long running processes and human in the loop interaction.  
+  For details see: [https://a2a-protocol.org/latest/specification/](https://a2a-protocol.org/latest/specification/)
+
 ## Source code
 
 [https://github.com/siuyin/present_go_mcp_a2a](https://github.com/siuyin/present_go_mcp_a2a)
