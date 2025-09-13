@@ -9,7 +9,6 @@ import (
 	"log"
 
 	"github.com/boltdb/bolt"
-	"github.com/nats-io/nuid"
 	"github.com/siuyin/a2atry/msg"
 	"github.com/siuyin/dflt"
 	spec "trpc.group/trpc-go/trpc-a2a-go/protocol"
@@ -75,10 +74,17 @@ func NewBoltDBTaskManager(proc tm.MessageProcessor, opts ...BoltDBTaskManagerOpt
 }
 
 func (b *BoltDBTaskManager) OnSendMessage(ctx context.Context, r spec.SendMessageParams) (*spec.MessageResult, error) {
-	msg := spec.Message{
-		MessageID: nuid.Next(),
+	ret := &spec.MessageResult{}
+	msg := &r.Message
+	b.setMessageIDIfEmpty(msg)
+	b.setContextIDIfEmpty(msg)
+	if err := b.appendConversation(msg); err != nil {
+		return ret, err
 	}
-	return &spec.MessageResult{Result: &msg}, nil
+	if err := b.storeMessage(msg); err != nil {
+		return ret, err
+	}
+	return &spec.MessageResult{Result: msg}, nil
 }
 
 func (b *BoltDBTaskManager) OnSendMessageStream(ctx context.Context, r spec.SendMessageParams) (<-chan spec.StreamingMessageEvent, error) {
@@ -139,12 +145,17 @@ func (b *BoltDBTaskManager) appendConversation(msg *spec.Message) error {
 	cid := *msg.ContextID
 	return db.Update(func(tx *bolt.Tx) error {
 		bkt := tx.Bucket([]byte(ConversationBucket))
-		cb := bkt.Bucket([]byte(cid))
+		cb, err := bkt.CreateBucketIfNotExists([]byte(cid))
+		if err != nil {
+			return fmt.Errorf("create bucket: %s: %v", cid, err)
+		}
+
 		seq, err := cb.NextSequence()
 		if err != nil {
 			return fmt.Errorf("nextSequence: %v", err)
 		}
 
+		log.Println(seq)
 		key := itob(seq)
 		if err := cb.Put(key, []byte(msg.MessageID)); err != nil {
 			return fmt.Errorf("conversation put: %v", err)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/boltdb/bolt"
 	spec "trpc.group/trpc-go/trpc-a2a-go/protocol"
 )
 
@@ -39,7 +40,38 @@ func TestTaskManager(t *testing.T) {
 			t.Error("expected message ID, got empty ID")
 		}
 
-		// check message is stored
+		testMessageRetrieval(t, msg)
 
+		testSingleMessageIDStoredForConversation(t, msg)
+	})
+}
+
+func testMessageRetrieval(t *testing.T, msg *spec.Message) {
+	db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(MessageBucket))
+		dat := b.Get([]byte(msg.MessageID))
+		if dat == nil {
+			t.Error("expected to be able to retrieve message")
+		}
+		//t.Errorf("%s\n", dat)
+		if len(dat) == 0 {
+			t.Error("expected message, got empty response")
+		}
+		return nil
+	})
+}
+
+func testSingleMessageIDStoredForConversation(t *testing.T, msg *spec.Message) {
+	db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(ConversationBucket))
+		cb := b.Bucket([]byte(*msg.ContextID))
+		c := cb.Cursor()
+		for k, v := c.First(); k != nil; k, v = c.Next() {
+			if string(v) != msg.MessageID {
+				t.Error("incorrect message ID retrieved: ", msg.MessageID)
+			}
+		}
+
+		return nil
 	})
 }
