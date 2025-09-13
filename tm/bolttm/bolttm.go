@@ -3,6 +3,7 @@ package bolttm
 
 import (
 	"context"
+	"encoding/binary"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -136,7 +137,21 @@ func (b *BoltDBTaskManager) appendConversation(msg *spec.Message) error {
 	}
 
 	cid := *msg.ContextID
-	bkt := tx.Bucket([]byte(MessageBucket))
+	return db.Update(func(tx *bolt.Tx) error {
+		bkt := tx.Bucket([]byte(ConversationBucket))
+		cb := bkt.Bucket([]byte(cid))
+		seq, err := cb.NextSequence()
+		if err != nil {
+			return fmt.Errorf("nextSequence: %v", err)
+		}
+
+		key := itob(seq)
+		if err := cb.Put(key, []byte(msg.MessageID)); err != nil {
+			return fmt.Errorf("conversation put: %v", err)
+		}
+
+		return nil
+	})
 }
 
 type BoltDBTaskManagerOption struct{}
@@ -158,4 +173,10 @@ func msgFrom(s string) spec.Message {
 		Role:  spec.MessageRoleUser,
 		Parts: []spec.Part{spec.NewTextPart(s)},
 	}
+}
+
+func itob(v uint64) []byte {
+	b := make([]byte, 8)
+	binary.BigEndian.PutUint64(b, v)
+	return b
 }
