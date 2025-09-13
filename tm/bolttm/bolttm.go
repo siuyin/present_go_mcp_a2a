@@ -84,6 +84,15 @@ func (b *BoltDBTaskManager) OnSendMessage(ctx context.Context, r spec.SendMessag
 	if err := b.storeMessage(msg); err != nil {
 		return ret, err
 	}
+
+	//FIXME: options should be configured from request, r
+	//FIXME: handler should be specified. Currently not used.
+	res, err := b.Processor.ProcessMessage(ctx, msg, nil, nil)
+	if err != nil {
+		return ret, err
+	}
+
+	b.setMessageIDIfEmpty(res.Result)
 	return &spec.MessageResult{Result: msg}, nil
 }
 
