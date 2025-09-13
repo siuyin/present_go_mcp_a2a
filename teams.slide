@@ -1,0 +1,56 @@
+# Agentic Teams with Go
+MCP (Model Context Protocol) and A2A (Agent to Agent) protocol
+
+
+Loh Siu Yin
+Engineer, Beyond Broadcast LLP
+siuyin@beyondbroadcast.com
+
+## Life of a Task
+[https://a2a-protocol.org/dev/topics/life-of-a-task/](https://a2a-protocol.org/dev/topics/life-of-a-task/)
+
+From the above specification:
+
+- Respond with a Stateless **Message**:  
+  This type of response is typically used for immediate, self-contained interactions that conclude without requiring further state management.
+
+- Initiate a Stateful **Task**:  
+  If the response is a Task, the agent will process it through a defined lifecycle, communicating progress and requiring input as needed, until it reaches an interrupted state (e.g., input-required, auth-required) or a terminal state (e.g., completed, canceled, rejected, failed).
+
+## Managing Tasks
+[https://a2a-protocol.org/dev/specification/#73-tasksget](https://a2a-protocol.org/dev/specification/#73-tasksget)
+
+Task:
+- Get
+- Cancel
+- PushNotificationConfig
+  - Get
+  - Set
+  - List
+  - Delete
+- Resubscribe
+ 
+## Inventory Query Agent
+.code -numbers 05_a2ainventory/main.go /func myTaskManager/,/^}/
+
+From the source code above, I used an in-memory task manager.  
+If the agent is terminated, it loses any task state it held.
+
+Let's build a persistent task manager with a Key-Value store like redis or boltdb.  
+I will use boltdb. [https://github.com/boltdb/bolt](https://github.com/boltdb/bolt)
+
+## tm.TaskManager
+The TaskManager interface:  
+[https://pkg.go.dev/trpc.group/trpc-go/trpc-a2a-go@v0.2.3/taskmanager#TaskManager](https://pkg.go.dev/trpc.group/trpc-go/trpc-a2a-go@v0.2.3/taskmanager#TaskManager)
+
+TaskManager methods:
+- OnSendMessage
+- OnSendMessageStream
+- OnGetTask
+- OnCancelTask
+- OnPushNotificationGet
+- OnResubscribe
+
+## Source code
+
+[https://github.com/siuyin/present_go_mcp_a2a](https://github.com/siuyin/present_go_mcp_a2a)
