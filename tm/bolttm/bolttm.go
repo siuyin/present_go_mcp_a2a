@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/boltdb/bolt"
-	"github.com/siuyin/a2atry/msg"
+	mesg "github.com/siuyin/a2atry/msg"
 	"github.com/siuyin/dflt"
 	spec "trpc.group/trpc-go/trpc-a2a-go/protocol"
 	tm "trpc.group/trpc-go/trpc-a2a-go/taskmanager"
@@ -88,6 +88,8 @@ func (b *BoltDBTaskManager) OnSendMessage(ctx context.Context, r spec.SendMessag
 		return ret, err
 	}
 
+	log.Printf("%#v", *msg)
+	log.Printf("%q", getText(*msg))
 	//FIXME: options should be configured from request, r
 	options := tm.ProcessOptions{}
 	//FIXME: handler should be specified. Currently not used.
@@ -199,7 +201,7 @@ type EchoProc struct{}
 func (e *EchoProc) ProcessMessage(ctx context.Context, m spec.Message, opts tm.ProcessOptions, handler tm.TaskHandler) (*tm.MessageProcessingResult, error) {
 	res := &spec.Message{
 		Role:  spec.MessageRoleAgent,
-		Parts: []spec.Part{spec.NewTextPart("Echo: " + msg.Text(m))},
+		Parts: []spec.Part{spec.NewTextPart("Echo: " + mesg.Text(m))},
 	}
 	return &tm.MessageProcessingResult{Result: res}, nil
 }
@@ -215,4 +217,13 @@ func itob(v uint64) []byte {
 	b := make([]byte, 8)
 	binary.BigEndian.PutUint64(b, v)
 	return b
+}
+func getText(message spec.Message) string {
+	for _, part := range message.Parts {
+		//log.Println(part)
+		if textPart, ok := part.(spec.TextPart); ok {
+			return textPart.Text
+		}
+	}
+	return ""
 }

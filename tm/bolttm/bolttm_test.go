@@ -53,7 +53,7 @@ func testMessageRetrieval(t *testing.T, msg *spec.Message) {
 		if dat == nil {
 			t.Error("expected to be able to retrieve message")
 		}
-		//t.Errorf("%s\n", dat)
+		t.Errorf("%s\n", dat)
 		if len(dat) == 0 {
 			t.Error("expected message, got empty response")
 		}
