@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"testing"
 
 	"github.com/boltdb/bolt"
 	"github.com/siuyin/a2atry/msg"
@@ -27,7 +28,9 @@ func init() {
 func initDB() {
 	var err error
 	path := dflt.EnvString("BOLTDB", "/tmp/bolttm.db")
-	log.Printf("BOLTDB=%s", path)
+	if !testing.Testing() {
+		log.Printf("BOLTDB=%s", path)
+	}
 	db, err = bolt.Open(path, 0600, nil)
 	if err != nil {
 		log.Fatal("bolt open: ", err)
@@ -70,7 +73,7 @@ func NewBoltDBTaskManager(proc tm.MessageProcessor, opts ...BoltDBTaskManagerOpt
 		return nil, fmt.Errorf("processor cannot be nil")
 	}
 
-	return &BoltDBTaskManager{}, nil
+	return &BoltDBTaskManager{Processor: proc}, nil
 }
 
 func (b *BoltDBTaskManager) OnSendMessage(ctx context.Context, r spec.SendMessageParams) (*spec.MessageResult, error) {
@@ -86,14 +89,28 @@ func (b *BoltDBTaskManager) OnSendMessage(ctx context.Context, r spec.SendMessag
 	}
 
 	//FIXME: options should be configured from request, r
+	options := tm.ProcessOptions{}
 	//FIXME: handler should be specified. Currently not used.
-	res, err := b.Processor.ProcessMessage(ctx, msg, nil, nil)
+	res, err := b.Processor.ProcessMessage(ctx, *msg, options, nil)
 	if err != nil {
 		return ret, err
 	}
 
-	b.setMessageIDIfEmpty(res.Result)
-	return &spec.MessageResult{Result: msg}, nil
+	rmsg, ok := res.Result.(*spec.Message)
+	if !ok {
+		return ret, err
+	}
+	rmsg.Role = spec.MessageRoleAgent
+
+	b.setMessageIDIfEmpty(rmsg)
+	b.setContextIDIfEmpty(rmsg)
+	if err := b.appendConversation(rmsg); err != nil {
+		return ret, err
+	}
+	if err := b.storeMessage(rmsg); err != nil {
+		return ret, err
+	}
+	return &spec.MessageResult{Result: rmsg}, nil
 }
 
 func (b *BoltDBTaskManager) OnSendMessageStream(ctx context.Context, r spec.SendMessageParams) (<-chan spec.StreamingMessageEvent, error) {
@@ -164,7 +181,6 @@ func (b *BoltDBTaskManager) appendConversation(msg *spec.Message) error {
 			return fmt.Errorf("nextSequence: %v", err)
 		}
 
-		log.Println(seq)
 		key := itob(seq)
 		if err := cb.Put(key, []byte(msg.MessageID)); err != nil {
 			return fmt.Errorf("conversation put: %v", err)
