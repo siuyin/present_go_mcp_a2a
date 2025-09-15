@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/boltdb/bolt"
-	mesg "github.com/siuyin/a2atry/msg"
+	"github.com/siuyin/a2atry/msg"
 	"github.com/siuyin/dflt"
 	spec "trpc.group/trpc-go/trpc-a2a-go/protocol"
 	tm "trpc.group/trpc-go/trpc-a2a-go/taskmanager"
@@ -78,41 +78,41 @@ func NewBoltDBTaskManager(proc tm.MessageProcessor, opts ...BoltDBTaskManagerOpt
 
 func (b *BoltDBTaskManager) OnSendMessage(ctx context.Context, r spec.SendMessageParams) (*spec.MessageResult, error) {
 	ret := &spec.MessageResult{}
-	msg := &r.Message
-	b.setMessageIDIfEmpty(msg)
-	b.setContextIDIfEmpty(msg)
-	if err := b.appendConversation(msg); err != nil {
+	m := r.Message
+	log.Printf("%#v", r.Message)
+	log.Printf("%q", msg.Text(r.Message))
+	b.setMessageIDIfEmpty(&m)
+	b.setContextIDIfEmpty(&m)
+	if err := b.appendConversation(&m); err != nil {
 		return ret, err
 	}
-	if err := b.storeMessage(msg); err != nil {
+	if err := b.storeMessage(&m); err != nil {
 		return ret, err
 	}
 
-	log.Printf("%#v", *msg)
-	log.Printf("%q", getText(*msg))
 	//FIXME: options should be configured from request, r
 	options := tm.ProcessOptions{}
 	//FIXME: handler should be specified. Currently not used.
-	res, err := b.Processor.ProcessMessage(ctx, *msg, options, nil)
+	res, err := b.Processor.ProcessMessage(ctx, m, options, nil)
 	if err != nil {
 		return ret, err
 	}
 
-	rmsg, ok := res.Result.(*spec.Message)
+	rm, ok := res.Result.(*spec.Message)
 	if !ok {
 		return ret, err
 	}
-	rmsg.Role = spec.MessageRoleAgent
+	rm.Role = spec.MessageRoleAgent
 
-	b.setMessageIDIfEmpty(rmsg)
-	b.setContextIDIfEmpty(rmsg)
-	if err := b.appendConversation(rmsg); err != nil {
+	b.setMessageIDIfEmpty(rm)
+	b.setContextIDIfEmpty(rm)
+	if err := b.appendConversation(rm); err != nil {
 		return ret, err
 	}
-	if err := b.storeMessage(rmsg); err != nil {
+	if err := b.storeMessage(rm); err != nil {
 		return ret, err
 	}
-	return &spec.MessageResult{Result: rmsg}, nil
+	return &spec.MessageResult{Result: rm}, nil
 }
 
 func (b *BoltDBTaskManager) OnSendMessageStream(ctx context.Context, r spec.SendMessageParams) (<-chan spec.StreamingMessageEvent, error) {
@@ -201,7 +201,7 @@ type EchoProc struct{}
 func (e *EchoProc) ProcessMessage(ctx context.Context, m spec.Message, opts tm.ProcessOptions, handler tm.TaskHandler) (*tm.MessageProcessingResult, error) {
 	res := &spec.Message{
 		Role:  spec.MessageRoleAgent,
-		Parts: []spec.Part{spec.NewTextPart("Echo: " + mesg.Text(m))},
+		Parts: []spec.Part{spec.NewTextPart("Echo: " + msg.Text(m))},
 	}
 	return &tm.MessageProcessingResult{Result: res}, nil
 }
@@ -220,8 +220,7 @@ func itob(v uint64) []byte {
 }
 func getText(message spec.Message) string {
 	for _, part := range message.Parts {
-		//log.Println(part)
-		if textPart, ok := part.(spec.TextPart); ok {
+		if textPart, ok := part.(*spec.TextPart); ok {
 			return textPart.Text
 		}
 	}
